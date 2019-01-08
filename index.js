@@ -39,9 +39,6 @@ function arr_type (v) {
 
 // return 'ascii', 'hex', or null (for objects or arrays with non-byte values)s
 function arr_format (v) {
-  if (v.type === 'Buffer' && v.data) {
-    v = v.data
-  }
   switch (arr_type(v)) {
     case 'arr':
       // check that values are bytes
@@ -67,6 +64,9 @@ function arr_format (v) {
 }
 
 function buf2str (v, maxchars) {
+  if (v.type === 'Buffer' && v.data) {
+    v = v.data
+  }
   var ret
   switch (arr_format(v)) {
     case 'ascii':
@@ -85,13 +85,14 @@ function buf2str (v, maxchars) {
   return ret
 }
 
-buf2str.stringify = function stringify (v, spacer) {
-  return JSON.stringify (v, function (k, v) {
+buf2str.stringify = function stringify (v, opt) {
+  opt = opt || {}
+  return JSON.stringify(v, function (k, v) {
     if (v && typeof v === 'object') {
-      v = buf2str(v)
+      v = buf2str(v, opt.buf_maxchars || 8)
     }
     return v
-  })
+  }, opt.spacer)
 }
 
 module.exports = buf2str

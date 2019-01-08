@@ -22,6 +22,7 @@ test('buf2str', function (t) {
     [ 'v',                                         'maxchars',                       'exp' ],
     [ [97,98,99],                                   8,                     'abc' ],
     [ Buffer.from('abcdefgh'),                      8,                     'abcdefgh' ],
+    [ Buffer.from('abcdefgh'),                      7,                     'abcdefg..' ],
     [ Buffer.from('abcdefghi'),                     8,                     'abcdefgh..' ],
     [ [1,2,3,4,5],                                  8,                     'x01020304' ],
     [ [1,2,3,4,500],                                8,                     [1,2,3,4,500] ],
@@ -32,4 +33,16 @@ test('buf2str', function (t) {
     [ { a: 'hi', b: ['x', 'y']},                    8,                     {"a":"hi","b":["x","y"]} ],
     [ 23 ,                                          8,                     23 ],
   ], buf2str)
+})
+
+
+test('stringify', function (t) {
+  t.table_assert([
+    [ 'v',    'opt',  'exp' ],
+    [ 33,     null,    '33' ],
+    [ {id: Buffer.from('abcdefghijk')},     null,    '{"id":"abcdefgh.."}' ],
+    [ {id: Buffer.from('abcdefghijk')},     {spacer: 2},    '{\n  "id": "abcdefgh.."\n}' ],
+    [ {id: Buffer.from('abcdefghijk')},     {buf_maxchars: 4},    '{"id":"abcd.."}' ],
+    [ {id: Buffer.from([0,220,240])},       {buf_maxchars: 4},    '{"id":"x00DC"}' ],
+  ], buf2str.stringify)
 })
