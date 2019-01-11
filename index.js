@@ -55,7 +55,7 @@ function arr_format (v) {
   }
 
   // check if all values are ascii
-  for (var j=0; j<v.length; j++) {
+  for (var j = 0; j < v.length; j++) {
     if (ASCII[v[j]] === 0) {
       return 'hex'
     }
@@ -64,6 +64,9 @@ function arr_format (v) {
 }
 
 function buf2str (v, maxchars) {
+  if (!v) { return null }
+  if (v.length === 0) { return [] }
+  if (maxchars == null) { maxchars = Infinity }
   if (v.type === 'Buffer' && v.data) {
     v = v.data
   }

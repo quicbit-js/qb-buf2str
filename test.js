@@ -19,12 +19,15 @@ var buf2str = require('.')
 
 test('buf2str', function (t) {
   t.table_assert([
-    [ 'v',                                         'maxchars',                       'exp' ],
+    [ 'v',                                         'maxchars',             'exp' ],
+    [ null,                                         8,                     null ],
+    [ [],                                           8,                     [] ],
     [ [97,98,99],                                   8,                     'abc' ],
     [ Buffer.from('abcdefgh'),                      8,                     'abcdefgh' ],
     [ Buffer.from('abcdefgh'),                      7,                     'abcdefg..' ],
     [ Buffer.from('abcdefghi'),                     8,                     'abcdefgh..' ],
     [ [1,2,3,4,5],                                  8,                     'x01020304' ],
+    [ [1,2,3,4,5],                                  null,                  'x0102030405' ],
     [ [1,2,3,4,500],                                8,                     [1,2,3,4,500] ],
     [ [0xAB, 0xFF],                                 8,                     'xABFF' ],
     [ { type: 'Buffer', data: [0xAB, 0xFF] },       8,                    'xABFF' ],
